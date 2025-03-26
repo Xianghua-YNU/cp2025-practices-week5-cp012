@@ -1,57 +1,70 @@
 import numpy as np
 import matplotlib.pyplot as plt
-# 模拟1000步的随机行走
-steps = 1000
-x = np.cumsum(np.random.randn(steps))
-y = np.cumsum(np.random.randn(steps))
 
-# 绘制完整轨迹图
-plt.figure(figsize=(8, 8))
-plt.plot(x, y, 'b-', alpha=0.7)
 
-# 标记起点和终点
-plt.scatter(x[0], y[0], color='green', s=100, label='起点')
-plt.scatter(x[-1], y[-1], color='red', s=100, label='终点')
+def random_walk_2d(steps):
+    """生成二维随机行走轨迹
 
-# 设置图形比例正确
-plt.axis('equal')
+    参数:
+        steps (int): 随机行走的步数
 
-# 添加标题和图例
-plt.title('1000步随机行走轨迹')
-plt.xlabel('X轴')
-plt.ylabel('Y轴')
-plt.legend()
+    返回:
+        tuple: 包含x和y坐标序列的元组 (x_coords, y_coords)
+    """
+    x_steps = np.random.choice([-1, 1], size=steps)
+    y_steps = np.random.choice([-1, 1], size=steps)
+    x_coords = np.cumsum(x_steps)
+    y_coords = np.cumsum(y_steps)
+    return x_coords, y_coords
 
-# 显示图形
-plt.show()
-seeds = [42, 123, 456, 789]
-fig, axes = plt.subplots(2, 2, figsize=(10, 10))
 
-for i, seed in enumerate(seeds):
-    np.random.seed(seed)
-    steps = 1000
-    x = np.cumsum(np.random.randn(steps))
-    y = np.cumsum(np.random.randn(steps))
+def plot_single_walk(path):
+    """绘制单个随机行走轨迹
 
-    # 计算当前子图的行和列索引
-    row = i // 2
-    col = i % 2
+    参数:
+        path (tuple): 包含x和y坐标序列的元组
+    """
+    x_coords, y_coords = path
+    plt.plot(x_coords, y_coords, 'b-', alpha=0.7)
+    plt.scatter(x_coords[0], y_coords[0], color='green', s=100, label='起点')
+    plt.scatter(x_coords[-1], y_coords[-1], color='red', s=100, label='终点')
+    plt.axis('equal')
+    plt.legend()
+    plt.title('单个随机行走轨迹')
+    plt.xlabel('X轴')
+    plt.ylabel('Y轴')
+    plt.show()
 
-    # 在子图中绘制轨迹
-    axes[row, col].plot(x, y, 'b-', alpha=0.7)
 
-    # 标记起点和终点
-    axes[row, col].scatter(x[0], y[0], color='green', s=100, label='起点')
-    axes[row, col].scatter(x[-1], y[-1], color='red', s=100, label='终点')
+def plot_multiple_walks():
+    """在2x2子图中绘制四个不同的随机行走轨迹"""
+    fig, axes = plt.subplots(2, 2, figsize=(10, 10))
+    seeds = [42, 123, 456, 789]
 
-    # 设置图形比例正确
-    axes[row, col].axis('equal')
+    for i, seed in enumerate(seeds):
+        np.random.seed(seed)
+        path = random_walk_2d(1000)
+        x_coords, y_coords = path
+        row = i // 2
+        col = i % 2
 
-    # 添加标题和图例
-    axes[row, col].set_title(f'随机行走轨迹 {i + 1}')
-    axes[row, col].set_xlabel('X轴')
-    axes[row, col].set_ylabel('Y轴')
-    axes[row, col].legend()
+        axes[row, col].plot(x_coords, y_coords, 'b-', alpha=0.7)
+        axes[row, col].scatter(x_coords[0], y_coords[0], color='green', s=100, label='起点')
+        axes[row, col].scatter(x_coords[-1], y_coords[-1], color='red', s=100, label='终点')
+        axes[row, col].axis('equal')
+        axes[row, col].set_title(f'随机行走轨迹 {i + 1}')
+        axes[row, col].set_xlabel('X轴')
+        axes[row, col].set_ylabel('Y轴')
+        axes[row, col].legend()
 
-plt.tight_layout()
-plt.show()
+    plt.tight_layout()
+    plt.show()
+
+
+if __name__ == "__main__":
+    # 生成并绘制单个轨迹
+    single_path = random_walk_2d(1000)
+    plot_single_walk(single_path)
+
+    # 生成并绘制多个轨迹
+    plot_multiple_walks()
