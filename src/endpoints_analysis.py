@@ -2,7 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def random_walk_finals(num_steps, num_walks):
-    """生成多个二维随机游走的终点位置
+    """
+    生成多个二维随机游走的终点位置
     
     通过模拟多次随机游走，每次在x和y方向上随机选择±1移动，
     计算所有随机游走的终点坐标。每个随机游走都从原点(0,0)开始。
@@ -20,16 +21,22 @@ def random_walk_finals(num_steps, num_walks):
         >>> x_finals, y_finals = random_walk_finals(1000, 100)
         >>> print(f"第一个终点坐标: ({x_finals[0]}, {y_finals[0]})")
     """
-    # TODO: 实现随机游走算法
-    # 提示：
-    # 1. 使用np.zeros初始化坐标数组
-    # 2. 对每次游走使用np.random.choice生成±1的随机步长
-    # 3. 使用np.sum计算总位移
+    # 初始化x和y的终点坐标数组，初始值为0
+    x_finals = np.zeros(num_walks)
+    y_finals = np.zeros(num_walks)
     
-    pass
+    # 对于每一次随机游走
+    for i in range(num_walks):
+        # 在x方向上随机选择±1，重复num_steps次，并求和得到最终的x坐标
+        x_finals[i] = np.sum(np.random.choice([-1, 1], num_steps))
+        # 在y方向上随机选择±1，重复num_steps次，并求和得到最终的y坐标
+        y_finals[i] = np.sum(np.random.choice([-1, 1], num_steps))
+    
+    return (x_finals, y_finals)
 
 def plot_endpoints_distribution(endpoints):
-    """绘制二维随机游走终点的空间分布散点图
+    """
+    绘制二维随机游走终点的空间分布散点图
     
     将多次随机游走的终点在二维平面上可视化，观察其空间分布特征。
     图形包含所有终点的散点图，并保持x和y轴的比例相同。
@@ -44,15 +51,20 @@ def plot_endpoints_distribution(endpoints):
         >>> plot_endpoints_distribution(endpoints)
         >>> plt.show()
     """
-    # TODO: 实现散点图绘制
-    # 提示：
-    # 1. 使用endpoints解包获取x和y坐标
-    # 2. 使用plt.scatter绘制散点图
-    # 3. 设置坐标轴比例、标题和标签
-    pass
+    # 直接解包坐标
+    x_coords, y_coords = endpoints
+    # 绘制散点图
+    plt.scatter(x_coords, y_coords, alpha=0.5)
+    # 保持x和y轴的比例相同
+    plt.axis('equal')
+    # 设置标题和坐标轴标签
+    plt.title('Endpoint Distribution Scatter Plot')
+    plt.xlabel('X')
+    plt.ylabel('Y')
 
 def analyze_x_distribution(endpoints):
-    """分析二维随机游走终点x坐标的统计特性
+    """
+    分析二维随机游走终点x坐标的统计特性
     
     对随机游走终点的x坐标进行统计分析，计算样本均值和样本方差，
     并通过直方图和理论正态分布曲线可视化其分布特征。理论上，
@@ -73,31 +85,55 @@ def analyze_x_distribution(endpoints):
         >>> mean, var = analyze_x_distribution(endpoints)
         >>> print(f"均值: {mean:.2f}, 方差: {var:.2f}")
     """
-    # TODO: 实现统计分析和可视化
-    # 提示：
-    # 1. 提取x坐标数据
-    # 2. 使用numpy计算均值和方差
-    # 3. 绘制直方图
-    # 4. 添加理论正态分布曲线
-    # 5. 设置图形属性并打印统计结果
-    pass
+    # 获取x坐标数组
+    x_coords = endpoints[0]
+    
+    # 计算统计量
+    # 样本均值
+    mean = np.mean(x_coords)
+    # 样本方差，使用n-1作为分母（无偏估计）
+    var = np.var(x_coords, ddof=1)
+    
+    # 绘制x坐标直方图
+    plt.hist(x_coords, bins=50, density=True, alpha=0.7)
+    
+    # 添加理论正态分布曲线
+    # 生成从x最小值到最大值的100个点
+    x = np.linspace(min(x_coords), max(x_coords), 100)
+    # 计算正态分布的概率密度函数值
+    plt.plot(x, 1/np.sqrt(2*np.pi*var)*np.exp(-(x-mean)**2/(2*var)), 
+             'r-', label='Theoretical Normal Distribution')
+    
+    # 设置图形属性
+    plt.title('X-Coordinate Distribution Histogram')
+    plt.xlabel('X')
+    plt.ylabel('Frequency')
+    plt.legend()
+    
+    # 打印统计结果
+    print(f"Sample mean of X-coordinates: {mean:.2f}")
+    print(f"Sample variance of X-coordinates: {var:.2f}")
+    
 
 if __name__ == "__main__":
-    np.random.seed(42)  # 设置随机种子以保证可重复性
+    # 设置随机种子以保证可重复性
+    np.random.seed(42)
     
-    # 生成数据
+    # 生成数据，进行1000次随机游走，每次1000步
     endpoints = random_walk_finals(1000, 1000)
 
-    # 创建图形
+    # 创建图形，设置图形大小
     plt.figure(figsize=(12, 5))
     
-    # 绘制终点分布
+    # 绘制终点分布散点图
     plt.subplot(121)
     plot_endpoints_distribution(endpoints)
     
-    # 分析x坐标分布
+    # 分析x坐标分布，绘制直方图和正态分布曲线
     plt.subplot(122)
     analyze_x_distribution(endpoints)
     
+    # 调整子图之间的间距
     plt.tight_layout()
+    # 显示图形
     plt.show()
