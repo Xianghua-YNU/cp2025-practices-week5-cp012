@@ -25,6 +25,7 @@ def random_walk_finals(num_steps, num_walks):
     # 1. 使用np.zeros初始化坐标数组
     # 2. 对每次游走使用np.random.choice生成±1的随机步长
     # 3. 使用np.sum计算总位移
+    
     pass
 
 def plot_endpoints_distribution(endpoints):
