@@ -19,7 +19,9 @@ def random_walk_displacement(num_steps, num_simulations):
     # 1. 使用 np.random.choice 生成随机步长 ([-1, 1])
     # 2. 生成形状为 (2, num_simulations, num_steps) 的数组
     # 3. 对步数维度求和得到最终位移
-    
+    steps=np.random.choice([-1,1],size=(2,num_steps,num_simulations))
+    final_displacements=np.sum(steps,axis=2)
+    return final_displacements
     pass
 
 def plot_displacement_distribution(final_displacements, bins=30):
@@ -34,6 +36,14 @@ def plot_displacement_distribution(final_displacements, bins=30):
     # 1. 计算每次模拟的最终位移
     # 2. 使用plt.hist绘制直方图
     # 3. 添加标题和标签
+    displacements=np.sqrt(final_displacements[0]**2+final_displacements[1]**2)
+    plt.figure(figsize=(10,6))
+    plt.hist(displacements, bins=bins,density=True,alpha=0.7,color='r')
+    plt.title('Distribution of displacements')
+    plt.xlabel('displacement')
+    plt.ylabel('probability')
+    plt.legend()
+    plt.show()
     pass
 
 def plot_displacement_square_distribution(final_displacements, bins=30):
@@ -48,6 +58,13 @@ def plot_displacement_square_distribution(final_displacements, bins=30):
     # 1. 计算位移平方
     # 2. 使用plt.hist绘制直方图
     # 3. 添加标题和标签
+    displacement_squared=final_displacements[0]**2+final_displacements[1]**2
+    plt.hist(displacement_squared, bins=bins,density=True,alpha=0.7,color='g')
+    plt.title('Distribution of displacement squared')
+    plt.xlabel('displacement')
+    plt.ylabel('probability')
+    plt.legend()
+    plt.show()
     pass
 
 if __name__ == "__main__":
