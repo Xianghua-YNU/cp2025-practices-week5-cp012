@@ -1,50 +1,57 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
+# 模拟1000步的随机行走
+steps = 1000
+x = np.cumsum(np.random.randn(steps))
+y = np.cumsum(np.random.randn(steps))
 
-def random_walk_2d(steps):
-    """生成二维随机行走轨迹
-    
-    参数:
-        steps (int): 随机行走的步数
-        
-    返回:
-        tuple: 包含x和y坐标序列的元组 (x_coords, y_coords)
-    """
-    # TODO: 实现随机行走算法
-    # 提示：
-    # 1. 使用 np.random.choice 生成随机步长 ([-1, 1])
-    # 2. 分别生成x和y方向的步长序列
-    # 3. 使用 cumsum() 计算累积和得到轨迹
-    pass
+# 绘制完整轨迹图
+plt.figure(figsize=(8, 8))
+plt.plot(x, y, 'b-', alpha=0.7)
 
-def plot_single_walk(path):
-    """绘制单个随机行走轨迹
-    
-    参数:
-        path (tuple): 包含x和y坐标序列的元组
-    """
-    # TODO: 实现单个轨迹的绘制
-    # 提示：
-    # 1. 使用 plt.plot 绘制轨迹线
-    # 2. 使用 plt.scatter 标记起点和终点
-    # 3. 设置坐标轴比例相等
-    # 4. 添加图例
-    pass
+# 标记起点和终点
+plt.scatter(x[0], y[0], color='green', s=100, label='起点')
+plt.scatter(x[-1], y[-1], color='red', s=100, label='终点')
 
-def plot_multiple_walks():
-    """在2x2子图中绘制四个不同的随机行走轨迹"""
-    # TODO: 实现多个轨迹的绘制
-    # 提示：
-    # 1. 创建2x2的子图布局
-    # 2. 对每个子图重复以下步骤：
-    #    - 生成随机行走轨迹
-    #    - 绘制轨迹线
-    #    - 标记起点和终点
-    #    - 设置标题和图例
-    pass
+# 设置图形比例正确
+plt.axis('equal')
 
-if __name__ == "__main__":
-    # TODO: 完成主程序逻辑
-    # 1. 生成并绘制单个轨迹
-    # 2. 生成并绘制多个轨迹
-    pass
+# 添加标题和图例
+plt.title('1000步随机行走轨迹')
+plt.xlabel('X轴')
+plt.ylabel('Y轴')
+plt.legend()
+
+# 显示图形
+plt.show()
+seeds = [42, 123, 456, 789]
+fig, axes = plt.subplots(2, 2, figsize=(10, 10))
+
+for i, seed in enumerate(seeds):
+    np.random.seed(seed)
+    steps = 1000
+    x = np.cumsum(np.random.randn(steps))
+    y = np.cumsum(np.random.randn(steps))
+
+    # 计算当前子图的行和列索引
+    row = i // 2
+    col = i % 2
+
+    # 在子图中绘制轨迹
+    axes[row, col].plot(x, y, 'b-', alpha=0.7)
+
+    # 标记起点和终点
+    axes[row, col].scatter(x[0], y[0], color='green', s=100, label='起点')
+    axes[row, col].scatter(x[-1], y[-1], color='red', s=100, label='终点')
+
+    # 设置图形比例正确
+    axes[row, col].axis('equal')
+
+    # 添加标题和图例
+    axes[row, col].set_title(f'随机行走轨迹 {i + 1}')
+    axes[row, col].set_xlabel('X轴')
+    axes[row, col].set_ylabel('Y轴')
+    axes[row, col].legend()
+
+plt.tight_layout()
+plt.show()
